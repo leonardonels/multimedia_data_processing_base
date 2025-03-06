@@ -1,3 +1,0 @@
-C:/Users/LeoNe/Git/multimedia_data_processing/src/sorter_oop/cmake-build-debug/CMakeFiles/sorter.dir
-C:/Users/LeoNe/Git/multimedia_data_processing/src/sorter_oop/cmake-build-debug/CMakeFiles/edit_cache.dir
-C:/Users/LeoNe/Git/multimedia_data_processing/src/sorter_oop/cmake-build-debug/CMakeFiles/rebuild_cache.dir

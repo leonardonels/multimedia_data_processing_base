@@ -13,7 +13,7 @@ public:
     T* data_;
 
     // Default constructor
-    vector() : size_(0), capacity_(0), data_(nullptr)
+    vector() : size_(0), capacity_(1), data_(nullptr)
     {
         std::cout << "Creating vector" << std::endl;    // For debug purpose
 

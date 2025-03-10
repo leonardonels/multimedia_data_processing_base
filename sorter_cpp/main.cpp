@@ -11,7 +11,7 @@ public:
     int* data_;
 
     // Default constructor
-    vector() : size_(0), capacity_(0), data_(nullptr) {
+    vector() : size_(0), capacity_(1), data_(nullptr) {
         data_ = (int*)malloc(capacity_ * sizeof(int));
         if (data_ == nullptr) {
             perror("Memory allocation error!");

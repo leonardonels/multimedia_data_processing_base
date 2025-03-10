@@ -15,7 +15,7 @@ typedef struct vector
 void vector_construct(struct vector *this)
 {
     this->size = 0;
-    this->capacity = 0;
+    this->capacity = 1;
     this->data = NULL;
     this->data = malloc(this->capacity * sizeof(int));
     if (this->data == NULL)

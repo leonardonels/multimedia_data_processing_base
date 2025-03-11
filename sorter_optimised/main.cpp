@@ -17,11 +17,12 @@ public:
     {
         std::cout << "Creating vector" << std::endl;    // For debug purpose
 
-        data_ = (T*)malloc(capacity_ * sizeof(T));
-        if (data_ == nullptr) {
-            perror("Constructor memory allocation error!");
-            exit(EXIT_FAILURE); // EXIT_FAILURE == 1
-        }
+        data_ = new T[capacity_];
+        //data_ = (T*)malloc(capacity_ * sizeof(T));
+        //if (data_ == nullptr) {
+        //    perror("Constructor memory allocation error!");
+        //    exit(EXIT_FAILURE); // EXIT_FAILURE == 1
+        //}
     }
     // Copy constructor
     vector(const vector& other)
@@ -30,11 +31,12 @@ public:
 
         size_ = other.size_;
         capacity_ = other.capacity_;
-        data_ = (T*)malloc(capacity_ * sizeof(T));
-        if (data_ == nullptr) {
-            perror("Copy memory allocation error!");
-            exit(EXIT_FAILURE); // EXIT_FAILURE == 1
-        }
+        data_ = new T[capacity_];
+        //data_ = (T*)malloc(capacity_ * sizeof(T));
+        //if (data_ == nullptr) {
+        //    perror("Copy memory allocation error!");
+        //    exit(EXIT_FAILURE); // EXIT_FAILURE == 1
+        //}
         for (size_t i = 0; i < size_; ++i) {
             data_[i] = other.data_[i];
         }
@@ -61,12 +63,13 @@ public:
         {
             free(data_);    // pay attention to self assaignment numbers = numbers
             capacity_ = other.capacity_;
-            data_ = (T*)malloc(capacity_ * sizeof(T));
-            if (data_ == nullptr)
-            {
-                perror("Operator= memory allocation error!");
-                exit(EXIT_FAILURE); // EXIT_FAILURE == 1
-            }
+            data_ = new T[capacity_];
+            //data_ = (T*)malloc(capacity_ * sizeof(T));
+            //if (data_ == nullptr)
+            //{
+            //    perror("Operator= memory allocation error!");
+            //    exit(EXIT_FAILURE); // EXIT_FAILURE == 1
+            //}
         }
         size_ = other.size_;
         for (size_t i = 0; i < size_; ++i)
@@ -102,12 +105,22 @@ public:
     void push_back(const T& x) {
         if (size_ == capacity_) {
             capacity_ *= 2;
-            T* new_data = (T*)realloc(data_, capacity_ * sizeof(T));
-            if (new_data == nullptr) {
-                perror("PushBack memory allocation error!");
-                exit(EXIT_FAILURE);
+
+            // Allocate new memory, copy old data in new memory, delete old memory.
+            T* tmp = new T[capacity_];
+            for (size_t i =0; i < size_; ++i)
+            {
+                tmp[i] = data_[i];
             }
-            data_ = new_data;
+            delete[] data_;
+            data_ = tmp;
+
+            //T* new_data = (T*)realloc(data_, capacity_ * sizeof(T));
+            //if (new_data == nullptr) {
+            //    perror("PushBack memory allocation error!");
+            //    exit(EXIT_FAILURE);
+            //}
+            //data_ = new_data;
         }
         data_[size_] = x;
         size_++;
@@ -116,8 +129,13 @@ public:
     size_t size() const {
         return size_;
     }
-
-    const T& at(size_t index) const {
+    // Before was: const T& at(size_t index) const{...
+    const T& operator[](size_t index) const {
+        assert(index < size_); // Works only in debug mode, in release mode will be ignored
+        return data_[index];
+    }
+    // Overload
+    T& operator[](size_t index) {
         assert(index < size_); // Works only in debug mode, in release mode will be ignored
         return data_[index];
     }
@@ -129,7 +147,7 @@ int compare_ints(const void *a, const void *b) {
 
 void print(const vector<int>& v, std::ostream& os) {
     for (size_t i = 0; i < v.size(); ++i) {
-        os << v.at(i) << "\n";
+        os << v[i] << "\n";
     }
 }
 // Returning void and working on a reference is unnatural coding
@@ -157,6 +175,39 @@ vector<int> read(std::istream& is)
     return v;
 }
 
+int global_id = 0;
+struct widget
+{
+    int id_;
+    int x_;
+
+    widget()
+    {
+        id_ = global_id++;
+        x_ = 5;
+    }
+    widget(int x)
+    {
+        id_ = global_id++;
+        x_ = x;
+    }
+    widget(const widget& other)
+    {
+        id_ = global_id++;
+        x_ = other.x_;
+    }
+    widget& operator=(const widget& other)
+    {
+        x_ = other.x_;
+        return *this;
+    }
+    ~widget()
+    {
+        //global_id--;
+        std::cout << "Destroying widget" << std::endl;
+    }
+};
+
 int main(int argc, char* argv[]) {
     {
         if (argc != 3) {
@@ -182,6 +233,21 @@ int main(int argc, char* argv[]) {
         std::qsort(numbers.data_, numbers.size(), sizeof(int), compare_ints);
 
         print(numbers, fileout);
+
+        // Lesson purpose
+        int x = numbers[0];
+        numbers[0]=7;
+
+        vector<double> v;
+        v.push_back(3.);
+        v.push_back(4.56);
+        v.push_back(0.1);
+        v.push_back(3.14);
+
+        vector<widget> vec;
+        vec.push_back(widget(7));
+        vec.push_back(widget(25));
+        vec.push_back(widget(123));
 
         filein.close();
         fileout.close();

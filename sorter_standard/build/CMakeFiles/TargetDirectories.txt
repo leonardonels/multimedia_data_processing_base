@@ -1,0 +1,3 @@
+C:/Users/LeoNe/CLionProjects/sorter_standard/build/CMakeFiles/sorter_standard.dir
+C:/Users/LeoNe/CLionProjects/sorter_standard/build/CMakeFiles/edit_cache.dir
+C:/Users/LeoNe/CLionProjects/sorter_standard/build/CMakeFiles/rebuild_cache.dir
